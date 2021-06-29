@@ -101,6 +101,8 @@ struct AppConfig
 	string mailClientName;
 	string mailUser;
 	string mailPassword;
+	string registryUser;
+	string registryPassword;
 
 
 	void init()
@@ -124,6 +126,8 @@ struct AppConfig
 			["mailClientName", "mail-client-name"],
 			["mailUser", "mail-user"],
 			["mailPassword", "mail-password"],
+			["registryUser", "registry-user"],
+			["registryPassword", "registry-password"]
 		];
 		static foreach (var; variables) {{
 			alias T = typeof(__traits(getMember, this, var[0]));
@@ -193,6 +197,9 @@ void main()
 	if (appConfig.glurl.length) GitLabRepository.register(appConfig.glauth, appConfig.glurl);
 
 	auto router = new URLRouter;
+	router.any("*", performBasicAuth("Site Realm", (string user, string password) =>
+		user == appConfig.registryUser && password == appConfig.registryPassword
+	));
 	if (s_mirror.length) router.any("*", (req, res) { req.params["mirror"] = s_mirror; });
 	if (!noMonitoring)
 		router.get("*", (req, res) @trusted { if (!s_checkTask.running) startMonitoring(); });
