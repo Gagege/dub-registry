@@ -513,7 +513,7 @@ struct DbRepository {
 			throw new Exception("Invalid Repository Schema (only supports http and https)");
 		if (host.endsWith(".github.com") || host == "github.com" || host == "github") {
 			kind = "github";
-		} else if (host.endsWith(".gitlab.com") || host == "gitlab.com" || host == "gitlab") {
+		} else if (host.endsWith(".gitlab.com") || host == "gitlab.com" || host == "gitlab" || host.canFind("gitlab.")) {
 			kind = "gitlab";
 		} else if (host.endsWith(".bitbucket.org") || host == "bitbucket.org" || host == "bitbucket") {
 			kind = "bitbucket";
